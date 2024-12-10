@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Register</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Page</title>
+<style>
+    /* تنسيق عام للصفحة */
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+        background: url('c.jpg') no-repeat center center fixed; /* خلفية الصورة */
+        background-size: cover; /* جعل الصورة تغطي كامل الشاشة */
+        height: 100vh; /* ضبط ارتفاع الشاشة */
+        display: flex;
+        justify-content: center; /* توسيط أفقي */
+        align-items: center; /* توسيط عمودي */
+    }
+
+    /* الحاوية الرئيسية */
+    .login-container {
+        background: rgba(255, 255, 255, 0.9); /* خلفية شفافة */
+        padding: 20px 30px;
+        border-radius: 10px; /* زوايا مستديرة */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* ظل الصندوق */
+        width: 300px; /* عرض الحاوية */
+    }
+
+    /* تنسيق العنوان */
+    .login-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    /* تنسيق الحقول */
+    .login-container input[type="text"],
+    .login-container input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    /* تنسيق الزر */
+    .login-container button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    /* تأثير عند المرور على الزر */
+    .login-container button:hover {
+        background-color: #0056b3;
+    }
+
+    /* رابط استعادة كلمة المرور */
+    .login-container a {
+        display: block;
+        text-align: center;
+        margin-top: 10px;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .login-container a:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+
+<body>
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <form action="../Users/PC/Documents/login.php" method="POST">
+        <label for="Customer Name">Customer Name:</label>
+        <input type="text" id="Customer Name" name="Customer Name" required><br><br>
+        <label for="Booking ID">Booking ID:</label>
+        <input type="Booking ID" id="Booking ID" name="Booking ID" required><br><br>
+        <label for="Hotel Name">Hotel Name:</label>
+        <input type="" id="Hotel Name" name="Hotel Name" required><br><br>
+        <label for="Room Type">Room Type:</label>
+        <input type="Room Type" id="Room Type" name="Room Type" required><br><br>
+        <label for="Cehck in Date">Cehck in Date:</label>
+        <input type="Cehck in Date" id="Cehck in Date" name="Cehck in Date" required><br><br>
+        <label for="Cehck out Date"> Cehck out Date:</label>  
+        <input type="text" id="Cehck out Date" name="Cehck out Date" required><br><br>
+        <label for="Number of Night ">Number of Night:</label>
+        <input type="text" id="Number of Night" name="Number of Night" required><br><br>
+        <label for="Number of Guests">Number of Guests:</label>
+        <input type="Number of Guests" id="Number of Guests" name="Number of Guests" required><br><br>
+        <label for="Total Amount">Total Amount:</label>
+        <input type="text" id="Total Amount" name="Total Amount" required><br><br>
+        <label for="Pay">Pay:</label>
+        <input type="Pay" id="Pay" name="Pay" required><br><br>
+        <label for="Account number">Account number:</label>
+        <input type="Account number" id="" name="Account number" required><br><br>
+        <label for="Currency type">Currency type:</label>
+        <input type="Currency type" id="" name="Currency type" required><br><br>
+
+        <input type="submit" value="Exit" >
+
+        
+        <input type="submit" value="Next" >
+    </form>
+</body>
+</html>
+
+
+

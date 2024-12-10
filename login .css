@@ -1,0 +1,19 @@
+/* تنسيق عام لعنصر body */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: url('background-image.jpg') no-repeat center center fixed; /* خلفية صورة */
+    background-size: cover; /* جعل الصورة تغطي كامل الشاشة */
+    height: 100vh; /* ضبط ارتفاع الشاشة ليملأ كامل الصفحة */
+    display: flex;
+    justify-content: center; /* توسيط المحتوى أفقيًا */
+    align-items: center; /* توسيط المحتوى عموديًا */
+}
+
+/* تنسيق حاوية تسجيل الدخول */
+.login-container {
+    background: rgba(255, 255, 255, 0.9); /* خلفية شفافة */
+    padding: 20px;
+    border-radius: 10px; /* زوايا مستديرة */
+    box-shadow: 0 4px 
