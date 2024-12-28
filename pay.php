@@ -151,26 +151,26 @@ if($_POST["pay"]==True)
 {
 // Collect form-data
 $CustomerName=$_POST["Customer Name"];
-$Booking ID=$_POST[" Booking ID"];
-$Hotel Name=$_POST["Hotel Name"];
-$Room Type=$_POST["Room Type"];
-$Check-in Date=$_POST[" Check-in Date"];
-$Check-out Date=$_POST[" Check-out Date"];
-$Number of Nights=$_POST[" Number of Nights"];
-$Number of Guests=$_POST[" Number of Guests"];
-$Total Amount=$_POST[" Total Amount"];
+$BookingID=$_POST[" Booking ID"];
+$HotelName=$_POST["Hotel Name"];
+$RoomType=$_POST["Room Type"];
+$CheckinDate=$_POST[" Check-in Date"];
+$CheckoutDate=$_POST[" Check-out Date"];
+$NumberofNights=$_POST[" Number of Nights"];
+$NumberofGuests=$_POST[" Number of Guests"];
+$TotalAmount=$_POST[" Total Amount"];
 $Pay=$_POST[" Pay"];
-$Account Number=$_POST[" Account Number"];
-$Currency Type=$_POST[" Currency Type"];
+$AccountNumber=$_POST[" Account Number"];
+$CurrencyType=$_POST[" Currency Type"];
 // Create connection
-$conn = new mysqli("localhost", "root", "123", "Booking");
+$conn = new mysqli("localhost", "root", "", "pay");
 // Check connection
 if ($conn->connect_error) {
 die("Connection failed: " . $conn->connect_error);
 }
 // Insert Into The Table
-$sql = "INSERT INTO register (Customer Name, Booking ID,Hotel Name,Room Type,Check-in Date,Check-out Date,Number of Nights,Number of Guests,Total Amount,Pay,Account Number,Currency Type)
-VALUES ('$Customer Name', '$Booking ID','Hotel Name','Room Type','Check-in Date','Check-out Date','Number of Nights','Number of Guests','Total Amount', 'Pay','Account Number','Currency Type')";
+$sql = "INSERT INTO pay (CustomerName, Booking ID,HotelName,RoomType,CheckinDate,CheckoutDate,Numberof Nights,Numberof Guests,Total Amount,Pay,AccountNumber,CurrencyType)
+VALUES ('$CustomerName', '$BookingID','$HotelName','$RoomType','$CheckinDate','$CheckoutDate','$NumberofNights','$NumberofGuests','$TotalAmount', '$Pay','$AccountNumber','$CurrencyType')";
 if ($conn->query($sql) === TRUE) {
 echo "New record created successfully";
 } else {

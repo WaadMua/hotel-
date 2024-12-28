@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Register Page</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -89,21 +89,29 @@
     </div>
 </nav>
 
-<!-- Login Form -->
+<!-- Register Form -->
 <div class="form-container">
-    <h2>Login</h2>
-    <form action="C:/xampp/htdocs/hotel/login.php" method="POST">
+    <h2>Register</h2>
+    <form action="../Users/PC/Documents/login.php" method="POST">
         <div class="mb-3">
-            <label for="Email" class="form-label">Email</label>
-            <input type="email" id="Email" name="Email" class="form-control" placeholder="Enter your email" required>
+            <label for="User name" class="form-label">user name</label>
+            <input type="user name" id="user name" name="user name" class="form-control" placeholder="Enter your User name" required>
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
         </div>
+        <div class="mb-3">
+            <label for="Telephone" class="form-label">Telephone</label>
+            <input type="Telephone" id="password" name="Telephone" class="form-control" placeholder="Enter your Telephone" required>
+        </div>
+        <div class="mb-3">
+            <label for="Email" class="form-label">email</label>
+            <input type="Email" id="Email" name="Email" class="form-control" placeholder="Enter your Email" required>
+        </div>
         <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary btn-custom"><i class="fas fa-sign-in-alt"></i> LOGIN</button>
-            <a href="register.html" class="btn btn-link">Register</a>
+            <button type="submit" class="btn btn-primary btn-custom"><i class="fas fa-sign-in-alt"></i> sign up</button>
+            <a href="login.html"></a>
         </div>
     </form>
 </div>
@@ -112,3 +120,28 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<?php
+if($_POST["sign up"]==True)
+{
+// Collect form-data
+$userName=$_POST["user Name"];
+$password=$_POST["password"];
+$Telephone=$_POST["Telephone"];
+$Email=$_POST["Email"];
+// Create connection
+$conn = new mysqli("localhost", "root", "", "register");
+// Check connection
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+// Insert Into The Table
+$sql = "INSERT INTO register (userName, password, Telephone ,Email)
+VALUES ('$userName', '$password', '$Telephone','$Email)";
+if ($conn->query($sql) === TRUE) {
+echo "New record created successfully";
+} else {
+echo "Error: " . $sql . "<br>" . $conn->error;
+}
+$conn->close();
+}
+?>

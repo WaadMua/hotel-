@@ -92,7 +92,7 @@
 <!-- Login Form -->
 <div class="form-container">
     <h2>Login</h2>
-    <form action="C:/xampp/htdocs/hotel/login.php" method="POST">
+    <form action="../Users/PC/Documents/login.php" method="POST">
         <div class="mb-3">
             <label for="Email" class="form-label">Email</label>
             <input type="email" id="Email" name="Email" class="form-control" placeholder="Enter your email" required>
@@ -112,3 +112,26 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<?php>
+if($_POST["login"]==True)
+{
+// Collect form-data
+$password=$_POST["password"];
+$Email=$_POST[" Email"];
+// Create connection
+$conn = new mysqli("localhost", "root", "", "login");
+// Check connection
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+// Insert Into The Table
+$sql = "INSERT INTO login (password, Email)
+VALUES ('$password', '$Email')";
+if ($conn->query($sql) === TRUE) {
+echo "New record created successfully";
+} else {
+echo "Error: " . $sql . "<br>" . $conn->error;
+}
+$conn->close();
+}
+?>

@@ -140,21 +140,21 @@ if($_POST["Next"]==True)
 {
 // Collect form-data
 $CustomerName=$_POST["Customer Name"];
-$Customer Email=$_POST["Customer Email"];
-$Customer Address=$_POST["Customer Address"];
-$Customer Phone=$_POST["Customer Phone"];
-$Customer Nationality=$_POST["Customer Nationality"];
-$Proof of Identity=$_POST["Proof of Identity"];
-$Customer Job=$_POST["Customer Job"];
+$CustomerEmail=$_POST["Customer Email"];
+$CustomerAddress=$_POST["Customer Address"];
+$CustomerPhone=$_POST["Customer Phone"];
+$CustomerNationality=$_POST["Customer Nationality"];
+$ProofofIdentity=$_POST["Proof of Identity"];
+$CustomerJob=$_POST["Customer Job"];
 // Create connection
-$conn = new mysqli("localhost", "root", "123", "Booking");
+$conn = new mysqli("localhoste", "root", "", "Customer");
 // Check connection
 if ($conn->connect_error) {
 die("Connection failed: " . $conn->connect_error);
 }
 // Insert Into The Table
-$sql = "INSERT INTO register (Customer Name, Customer Email, Customer Address ,Customer Phone,Customer Nationality,Proof of Identity,Customer Job)
-VALUES ('$Customer Name', '$Customer Email', '$Customer Address','$Customer Phone,$Customer Nationality',$Proof of Identity,$Customer Job,$)";
+$sql = "INSERT INTO Customer (CustomerName, CustomerEmail, CustomerAddress ,CustomerPhone,CustomerNationality,ProofofIdentity,CustomerJob)
+VALUES ('$CustomerName', '$CustomerEmail', '$CustomerAddress','$CustomerPhone','$CustomerNationality','$ProofofIdentity','$CustomerJob')";
 if ($conn->query($sql) === TRUE) {
 echo "New record created successfully";
 } else {
