@@ -47,7 +47,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
     <div class="container">
-        <a class="navbar-brand" href="index.html">
+        <a class="navbar-brand" href="index.php">
             <i class="fas fa-hotel"></i> Hotel Management
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,20 +56,33 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="home.html">Home</a>
+                    <a class="nav-link active" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">About</a>
+                    <a class="nav-link" href="index.php">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">Room</a>
+                    <a class="nav-link" href="index.php">Room</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">Contact</a>
+                    <a class="nav-link" href="index.php">Contact</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="login.html">Login</a>
-                </li>
+                <?php
+                session_start();
+                if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
+                    $userName = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8'); // Escape session name for safety
+                    echo "<li class='nav-item'>
+        <a class='nav-link' href='php/logout.php'>$userName</a>
+    </li>";
+                    echo "<li class='nav-item'>
+        <a class='nav-link' href='mybookings.php'>My bookings</a>
+    </li>";
+                } else {
+                    echo "<li class='nav-item'>
+        <a class='nav-link' href='login.php'>Login</a>
+    </li>";
+                }
+                ?>
             </ul>
         </div>
     </div>
@@ -108,7 +121,7 @@
 
         <!-- Buttons -->
         <div class="col-12 d-flex justify-content-between mt-4">
-            <a href="home.html" class="btn btn-danger btn-custom"><i class="fas fa-arrow-left"></i> Back</a>
+            <a href="index.php" class="btn btn-danger btn-custom"><i class="fas fa-arrow-left"></i> Back</a>
             <button type="submit" class="btn btn-success btn-custom"><i class="fas fa-check"></i> Next</button>
         </div>
     </form>

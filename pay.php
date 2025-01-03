@@ -56,16 +56,16 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="home.html">Home</a>
+                    <a class="nav-link active" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">About</a>
+                    <a class="nav-link" href="index.php">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">Room</a>
+                    <a class="nav-link" href="index.php">Room</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">Contact</a>
+                    <a class="nav-link" href="index.php">Contact</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="login.html">Login</a>
@@ -136,7 +136,7 @@
 
         <!-- Buttons -->
         <div class="col-12 d-flex justify-content-between mt-4">
-            <a href="home.html" class="btn btn-danger btn-custom"><i class="fas fa-home"></i> Exit</a>
+            <a href="index.php" class="btn btn-danger btn-custom"><i class="fas fa-home"></i> Exit</a>
             <button type="submit" class="btn btn-success btn-custom"><i class="fas fa-check"></i> pay</button>
         </div>
     </form>

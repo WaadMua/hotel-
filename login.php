@@ -61,7 +61,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
     <div class="container">
-        <a class="navbar-brand" href="index.html">
+        <a class="navbar-brand" href="index.php">
             <i class="fas fa-hotel"></i> Hotel Management
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -70,20 +70,33 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="home.html">Home</a>
+                    <a class="nav-link active" href="index.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">About</a>
+                    <a class="nav-link" href="index.php">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">Room</a>
+                    <a class="nav-link" href="index.php">Room</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="home.html">Contact</a>
+                    <a class="nav-link" href="index.php">Contact</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="login.html">Login</a>
-                </li>
+                <?php
+                session_start();
+                if (isset($_SESSION['login']) && $_SESSION['login'] === true) {
+                    $userName = htmlspecialchars($_SESSION['name'], ENT_QUOTES, 'UTF-8'); // Escape session name for safety
+                    echo "<li class='nav-item'>
+        <a class='nav-link' href='php/logout.php'>$userName</a>
+    </li>";
+                    echo "<li class='nav-item'>
+        <a class='nav-link' href='mybookings.php'>My bookings</a>
+    </li>";
+                } else {
+                    echo "<li class='nav-item'>
+        <a class='nav-link' href='login.php'>Login</a>
+    </li>";
+                }
+                ?>
             </ul>
         </div>
     </div>
@@ -92,7 +105,7 @@
 <!-- Login Form -->
 <div class="form-container">
     <h2>Login</h2>
-    <form action="../Users/PC/Documents/login.php" method="POST">
+    <form action="#" method="POST">
         <div class="mb-3">
             <label for="Email" class="form-label">Email</label>
             <input type="email" id="Email" name="Email" class="form-control" placeholder="Enter your email" required>
@@ -102,36 +115,58 @@
             <input type="password" id="password" name="password" class="form-control" placeholder="Enter your password" required>
         </div>
         <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-primary btn-custom"><i class="fas fa-sign-in-alt"></i> LOGIN</button>
-            <a href="register.html" class="btn btn-link">Register</a>
+            <button type="submit" name="login" class="btn btn-primary btn-custom"><i class="fas fa-sign-in-alt"></i> LOGIN</button>
+            <a href="register.php" class="btn btn-link">Register</a>
         </div>
     </form>
+    <?php
+    if (isset($_POST["login"])) {
+        // Collect form data and sanitize inputs
+        $password = trim($_POST["password"]);
+        $email = trim($_POST["Email"]);
+
+        // Create connection
+        $conn = new mysqli("localhost", "root", "", "hotel");
+
+        // Check connection
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
+
+        // Query the database directly
+        $sql = "SELECT * FROM customer WHERE customer_email = '$email'";
+        $result = $conn->query($sql);
+
+        if ($result && $result->num_rows === 1) {
+            // Fetch the user data
+            $user = $result->fetch_assoc();
+
+            // Verify password (assuming passwords are hashed in the database)
+            if ($password == $user["customer_password"]) {
+                session_start();
+                $_SESSION["login"] = true;
+                $_SESSION["name"] = $user["customer_name"];
+                $_SESSION["id"] = $user["id"];
+                $_SESSION["admin"] = false;
+
+                echo "Login success";
+                // Redirect to dashboard or another page
+                header("Location: home.php");
+                exit;
+            } else {
+                echo "Invalid password.";
+            }
+        } else {
+            echo "No user found with this email.";
+        }
+
+        // Close the connection
+        $conn->close();
+    }
+    ?>
 </div>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-<?php>
-if($_POST["login"]==True)
-{
-// Collect form-data
-$password=$_POST["password"];
-$Email=$_POST[" Email"];
-// Create connection
-$conn = new mysqli("localhost", "root", "", "login");
-// Check connection
-if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
-// Insert Into The Table
-$sql = "INSERT INTO login (password, Email)
-VALUES ('$password', '$Email')";
-if ($conn->query($sql) === TRUE) {
-echo "New record created successfully";
-} else {
-echo "Error: " . $sql . "<br>" . $conn->error;
-}
-$conn->close();
-}
-?>
