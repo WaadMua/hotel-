@@ -65,6 +65,8 @@
 <br>
 <br>
 
+
+
 <?php
 
 $conn = new mysqli("localhost", "root", "", "hotel");
@@ -77,8 +79,23 @@ if ($conn->connect_error) {
 // Assuming customerID is passed via session or query parameter
 $customerID = $_SESSION['id'] ?? 1; // Replace with session variable if needed
 
-// Query to fetch booking data
-$sql = "SELECT * FROM booking WHERE customerID = ?";
+// Query to fetch booking data along with room and hotel information
+$sql = "SELECT 
+        b.id AS BookingNumber,
+        r.title AS RoomName,
+        h.name AS HotelName,
+        h.address AS HotelAddress,
+        b.CheckInDate,
+        b.CheckOutDate,
+        b.NumberOfGuests,
+        b.TotalPrice,
+        b.BookingStatus,
+        b.CreatedDate
+    FROM booking b
+    JOIN rooms r ON b.RoomNumber = r.id
+    JOIN hotel h ON r.hotel_id = h.id
+    WHERE b.customerID = ?
+";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $customerID);
 $stmt->execute();
@@ -93,11 +110,13 @@ if ($result->num_rows > 0) {
     echo '<table class="table table-bordered">';
     echo '<thead>';
     echo '<tr>';
-    echo '<th>Room Number</th>';
+    echo '<th>Booking Number</th>';
+    echo '<th>Room Name</th>';
+    echo '<th>Hotel Name</th>';
+    echo '<th>Hotel Address</th>';
     echo '<th>Check-In Date</th>';
     echo '<th>Check-Out Date</th>';
     echo '<th>Number of Guests</th>';
-    echo '<th>Number of Days</th>';
     echo '<th>Total Price</th>';
     echo '<th>Booking Status</th>';
     echo '<th>Created Date</th>';
@@ -108,14 +127,16 @@ if ($result->num_rows > 0) {
     // Loop through each booking and display it
     while ($row = $result->fetch_assoc()) {
         echo '<tr>';
-        echo '<td>' . htmlspecialchars($row['RoomNumber']) . '</td>';
+        echo '<td>' . htmlspecialchars($row['BookingNumber']) . '</td>';
+        echo '<td>' . htmlspecialchars($row['RoomName']) . '</td>';
+        echo '<td>' . htmlspecialchars($row['HotelName']) . '</td>';
+        echo '<td>' . htmlspecialchars($row['HotelAddress']) . '</td>';
         echo '<td>' . htmlspecialchars($row['CheckInDate']) . '</td>';
         echo '<td>' . htmlspecialchars($row['CheckOutDate']) . '</td>';
         echo '<td>' . htmlspecialchars($row['NumberOfGuests']) . '</td>';
-        echo '<td>' . htmlspecialchars($row['NumberOfDays']) . '</td>';
         echo '<td>$' . htmlspecialchars($row['TotalPrice']) . '</td>';
         echo '<td>' . htmlspecialchars($row['BookingStatus']) . '</td>';
-        echo '<td>' . date('Y-m-d', htmlspecialchars($row['CreatedDate'])) . '</td>';
+        echo '<td>' . date('Y-m-d', strtotime($row['CreatedDate'])) . '</td>';
         echo '</tr>';
     }
 
@@ -130,6 +151,7 @@ echo '</div>';
 echo '</section>';
 
 ?>
+
 
 
 
