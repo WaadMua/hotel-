@@ -151,7 +151,7 @@
 
                 echo "Login success";
                 // Redirect to dashboard or another page
-                header("Location: home.php");
+                header("Location: index.php");
                 exit;
             } else {
                 echo "Invalid password.";

@@ -166,8 +166,8 @@ if (isset($_POST['submitBooking'])) {
 
 
         // إدخال البيانات في قاعدة البيانات
-        $sql = "INSERT INTO booking (RoomNumber,CustomerID, CheckInDate, CheckOutDate, NumberOfGuests, TotalPrice, BookingStatus, CreatedDate)
-        VALUES ( '$roomNumber','$customerID', '$checkInDate', '$checkOutDate', '$numberOfGuests', '$totalPrice', '$bookingStatus', '$createdDate')";
+        $sql = "INSERT INTO booking (RoomNumber,CustomerID, CheckInDate, CheckOutDate, NumberOfGuests, TotalPrice, BookingStatus)
+        VALUES ( '$roomNumber','$customerID', '$checkInDate', '$checkOutDate', '$numberOfGuests', '$totalPrice', '$bookingStatus')";
 
 
         if ($conn->query($sql) === TRUE) {

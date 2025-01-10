@@ -20,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "Email and password are required.";
     } else {
         // Query to check admin credentials
-        $sql = "SELECT * FROM admins WHERE email = ? AND active = 1";
+        $sql = "SELECT * FROM admin WHERE email = ? AND active = 1";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -36,8 +36,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION["id"] = $admin['id'];
 
                 // Redirect to admin dashboard
-                header("Location: home.php");
+                header("Location: http://localhost/hotel-/admin/home.php");
                 exit();
+
             } else {
                 $error = "Invalid password.";
             }
