@@ -120,6 +120,7 @@ if ($result->num_rows > 0) {
     echo '<th>Total Price</th>';
     echo '<th>Booking Status</th>';
     echo '<th>Created Date</th>';
+    echo '<th>Action</th>'; // Add Action Column
     echo '</tr>';
     echo '</thead>';
     echo '<tbody>';
@@ -137,6 +138,13 @@ if ($result->num_rows > 0) {
         echo '<td>$' . htmlspecialchars($row['TotalPrice']) . '</td>';
         echo '<td>' . htmlspecialchars($row['BookingStatus']) . '</td>';
         echo '<td>' . date('Y-m-d', strtotime($row['CreatedDate'])) . '</td>';
+        echo '<td> <a href="pay.php?booking=' . urlencode($row['BookingNumber']) .
+            '&checkin=' . urlencode($row['CheckInDate']) .
+            '&checkout=' . urlencode($row['CheckOutDate']) .
+            '&price=' . urlencode($row['TotalPrice']) . '" class="btn btn-primary">
+        Pay Now
+    </a>
+    </td>';
         echo '</tr>';
     }
 

@@ -53,6 +53,7 @@ $columns = $tableColumns[$table];
                     <li class="nav-item"><a class="nav-link" href="display.php?table=hotel">Hotel</a></li>
                     <li class="nav-item"><a class="nav-link" href="rooms/rooms.php">Rooms</a></li>
                     <li class="nav-item"><a class="nav-link" href="booking/booking.php">Booking</a></li>
+                    <li class="nav-item"><a class="nav-link" href="pay.php">pay</a></li>
                     <li class="nav-item"><a class="nav-link" href="../php/logout.php">Logout</a></li>
                 </ul>
             </div>
