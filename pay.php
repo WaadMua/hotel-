@@ -16,62 +16,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $checkOutDate = $_POST['checkOutDate'];
     $totalPrice = $_POST['totalPrice'];
 
-    // File upload handling
-    $targetDir = "uploads/";
-    $fileName = basename($_FILES["proof"]["name"]);
-    $targetFilePath = $targetDir . $fileName;
-    $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
-    $uploadError = $_FILES["proof"]["error"];
-
-    // Debugging: Check if file was uploaded
-    if ($uploadError > 0) {
-        echo "<p class='text-danger'>File Upload Error Code: $uploadError</p>";
-        switch ($uploadError) {
-            case 1:
-                echo "<p class='text-danger'>Error: The uploaded file exceeds the upload_max_filesize directive in php.ini.</p>";
-                break;
-            case 2:
-                echo "<p class='text-danger'>Error: The uploaded file exceeds the MAX_FILE_SIZE directive specified in the HTML form.</p>";
-                break;
-            case 3:
-                echo "<p class='text-danger'>Error: The uploaded file was only partially uploaded.</p>";
-                break;
-            case 4:
-                echo "<p class='text-danger'>Error: No file was uploaded.</p>";
-                break;
-            case 6:
-                echo "<p class='text-danger'>Error: Missing a temporary folder.</p>";
-                break;
-            case 7:
-                echo "<p class='text-danger'>Error: Failed to write file to disk.</p>";
-                break;
-            case 8:
-                echo "<p class='text-danger'>Error: A PHP extension stopped the file upload.</p>";
-                break;
-            default:
-                echo "<p class='text-danger'>Unknown upload error.</p>";
-        }
-        exit;
-    }
-
-    // Check if uploads directory is writable
-    if (!is_dir($targetDir) || !is_writable($targetDir)) {
-        echo "<p class='text-danger'>Error: The 'uploads/' directory is missing or not writable.</p>";
-        exit;
-    }
 
     // Allow only certain file types
-    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
-    if (!in_array($fileType, $allowedTypes)) {
-        echo "<p class='text-danger'>Error: Only JPG, JPEG, PNG & GIF files are allowed.</p>";
-        exit;
-    }
 
     // Move uploaded file
-    if (move_uploaded_file($_FILES["proof"]["tmp_name"], $targetFilePath)) {
+    $img_name=$_FILES["proof"]["name"];
+    $img_temp=$_FILES["name"]["tmp_name"];
+    move_uploaded_file($img_temp, "uploads/".$img_name);
+    $img="uploads/".$img_name;
         // Save to database
         $stmt = $conn->prepare("INSERT INTO pay (BookingNumber, CheckInDate, CheckOutDate, TotalPrice, Image) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssss", $bookingNumber, $checkInDate, $checkOutDate, $totalPrice, $fileName);
+        $stmt->bind_param("sssss", $bookingNumber, $checkInDate, $checkOutDate, $totalPrice, $img);
 
         if ($stmt->execute()) {
             echo "<script>alert('Payment proof uploaded successfully!'); window.location='index.php';</script>";
@@ -79,9 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "<p class='text-danger'>Database error: Failed to save payment details.</p>";
         }
         $stmt->close();
-    } else {
-        echo "<p class='text-danger'>Error: File upload failed. Please check directory permissions.</p>";
-    }
+
 }
 
 $conn->close();
