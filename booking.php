@@ -1,6 +1,95 @@
 <?php
 include 'php/checkLogin.php';
+session_start();
+
+$roomId = $_GET['id'];
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "hotel";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+if ($conn->connect_error) {
+    die("فشل الاتصال: " . $conn->connect_error);
+}
+
+// Get room price
+$sql = "SELECT price FROM rooms WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $roomId);
+$stmt->execute();
+$result = $stmt->get_result();
+$pricePerNight = 0;
+
+if ($result->num_rows > 0) {
+    $room = $result->fetch_assoc();
+    $pricePerNight = $room['price'];
+} else {
+    echo "<p class='text-danger'>Room not found.</p>";
+}
+
+$stmt->close();
+
+// Get booked dates for the room
+$bookedDates = [];
+$sql = "SELECT CheckInDate, CheckOutDate FROM booking WHERE RoomNumber = ? AND BookingStatus != 'CANCELLED'";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $roomId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    $start = strtotime($row['CheckInDate']);
+    $end = strtotime($row['CheckOutDate']);
+    for ($date = $start; $date <= $end; $date += 86400) {
+        $bookedDates[] = date("Y-m-d", $date);
+    }
+}
+
+$stmt->close();
+$conn->close();
 ?>
+
+<!-- Pass booked dates to JavaScript -->
+<script>
+    const bookedDates = <?= json_encode($bookedDates); ?>;
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const checkIn = document.getElementById('checkIn');
+        const checkOut = document.getElementById('checkOut');
+        const totalPriceField = document.getElementById('totalPrice');
+        const pricePerNight = <?= $pricePerNight; ?>;
+
+        function disableBookedDates(input) {
+            input.addEventListener('input', function () {
+                if (bookedDates.includes(this.value)) {
+                    alert("هذا التاريخ محجوز بالفعل، يرجى اختيار تاريخ آخر.");
+                    this.value = "";
+                }
+            });
+        }
+
+        function calculatePrice() {
+            const checkInDate = new Date(checkIn.value);
+            const checkOutDate = new Date(checkOut.value);
+
+            if (checkInDate && checkOutDate && checkOutDate > checkInDate) {
+                const diffTime = Math.abs(checkOutDate - checkInDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                totalPriceField.value = diffDays * pricePerNight;
+            } else {
+                totalPriceField.value = 0;
+            }
+        }
+
+        disableBookedDates(checkIn);
+        disableBookedDates(checkOut);
+        checkIn.addEventListener('change', calculatePrice);
+        checkOut.addEventListener('change', calculatePrice);
+    });
+</script>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -120,6 +209,32 @@ include 'php/checkLogin.php';
             <label for="checkIn" class="form-label">Check-in Date</label>
             <input type="date" id="checkIn" name="checkIn" class="form-control" required>
         </div>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const checkIn = document.getElementById("checkIn");
+
+                // Get today's date in YYYY-MM-DD format
+                const today = new Date().toISOString().split("T")[0];
+
+                // Set the minimum date to today to disable past dates
+                checkIn.setAttribute("min", today);
+
+                // Get booked dates from PHP
+                const bookedDates = <?= json_encode($bookedDates); ?>;
+
+                // Disable booked dates dynamically
+                checkIn.addEventListener("focus", function () {
+                    let options = checkIn.querySelectorAll("option");
+                    options.forEach(option => {
+                        if (bookedDates.includes(option.value)) {
+                            option.disabled = true;
+                        }
+                    });
+                });
+            });
+        </script>
+
         <div class="col-md-6">
             <label for="checkOut" class="form-label">Check-out Date</label>
             <input type="date" id="checkOut" name="checkOut" class="form-control" required>
@@ -146,23 +261,49 @@ include 'php/checkLogin.php';
             $totalPrice = $_POST['totalPrice'];
             $bookingStatus = "NEW";
 
-            $conn = new mysqli($servername, $username, $password, $dbname);
-            if ($conn->connect_error) {
-                die("فشل الاتصال: " . $conn->connect_error);
-            }
-
-            $sql = "INSERT INTO booking (RoomNumber, CustomerID, CheckInDate, CheckOutDate, NumberOfGuests, TotalPrice, BookingStatus)
-                    VALUES ('$roomId', '{$_SESSION['id']}', '$checkInDate', '$checkOutDate', '$numberOfGuests', '$totalPrice', '$bookingStatus')";
-
-            if ($conn->query($sql) === TRUE) {
-                echo "<p class='text-success'>تم إنشاء الحجز بنجاح!</p>";
+            // Ensure check-in and check-out dates are valid
+            if (strtotime($checkInDate) >= strtotime($checkOutDate)) {
+                echo "<p class='text-danger'>خطأ: يجب أن يكون تاريخ المغادرة بعد تاريخ الوصول.</p>";
             } else {
-                echo "<p class='text-danger'>خطأ أثناء الحجز: " . $conn->error . "</p>";
-            }
+                $conn = new mysqli($servername, $username, $password, $dbname);
+                if ($conn->connect_error) {
+                    die("فشل الاتصال: " . $conn->connect_error);
+                }
 
-            $conn->close();
+                // Check if the room is already booked for the selected dates
+                $sql = "SELECT * FROM booking WHERE RoomNumber = ? AND BookingStatus != 'CANCELLED' 
+                AND ((CheckInDate BETWEEN ? AND ?) OR (CheckOutDate BETWEEN ? AND ?) 
+                OR (? BETWEEN CheckInDate AND CheckOutDate) OR (? BETWEEN CheckInDate AND CheckOutDate))";
+
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("issssss", $roomId, $checkInDate, $checkOutDate, $checkInDate, $checkOutDate, $checkInDate, $checkOutDate);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows > 0) {
+                    echo "<p class='text-danger'>عذرًا، هذه الغرفة محجوزة بالفعل في هذه التواريخ. الرجاء اختيار تواريخ أخرى.</p>";
+                } else {
+                    // Insert booking if room is available
+                    $sql = "INSERT INTO booking (RoomNumber, CustomerID, CheckInDate, CheckOutDate, NumberOfGuests, TotalPrice, BookingStatus) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("issssis", $roomId, $_SESSION['id'], $checkInDate, $checkOutDate, $numberOfGuests, $totalPrice, $bookingStatus);
+
+                    if ($stmt->execute()) {
+                        echo "<p class='text-success'>تم إنشاء الحجز بنجاح!</p>";
+                    } else {
+                        echo "<p class='text-danger'>خطأ أثناء الحجز: " . $stmt->error . "</p>";
+                    }
+                }
+
+                $stmt->close();
+                $conn->close();
+            }
         }
+
         ?>
+
     </form>
 </div>
 
