@@ -68,7 +68,7 @@
             <div class="carousel-item active" style="background: url('Image/r1.jpg.jpg') no-repeat center center/cover; height: 90vh;">
                 <div class="carousel-caption">
                     <h3>Welcome to Our Hotel</h3>
-                    <a href="booking.php" class="btn btn-primary">Book Now</a>
+                    <a href="#Room" class="btn btn-primary">Book Now</a>
                 </div>
             </div>
             <div class="carousel-item" style="background: url('Image/r2.jpg.jpg') no-repeat center center/cover; height: 90vh;">
